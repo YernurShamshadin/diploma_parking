@@ -1,24 +1,29 @@
 FROM php:8.2-fpm
 
-COPY ./ /var/www/html/
+RUN apt-get update && apt-get install -y \
+          apt-utils \
+          libpq-dev \
+          libpng-dev \
+          libzip-dev \
+          zip unzip \
+          git && \
+          docker-php-ext-install pdo_pgsql && \
+          docker-php-ext-install pgsql && \
+          docker-php-ext-install bcmath && \
+          docker-php-ext-install gd && \
+          docker-php-ext-install zip && \
+          docker-php-ext-enable pgsql && \
+          apt-get clean && \
+          rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-WORKDIR /var/www/html/
+ADD php.ini /usr/local/etc/php/php.ini
 
-# Install packages
-RUN apt update -yqq && apt install -y libfreetype6-dev \
-    curl g++ build-essential \
-    unzip libzip-dev lftp \
-    libicu-dev libpq-dev libonig-dev libaio1  \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN curl -sS https://getcomposer.org/installer | php -- \
+    --filename=composer \
+    --install-dir=/usr/local/bin
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+USER 1000
 
-# Install php extensions (modules) and composer
-RUN docker-php-ext-install pcntl intl opcache pdo pdo_pgsql pgsql mbstring zip exif gd \
-    && docker-php-ext-enable opcache
-
-# Setting permissions
-RUN chmod -R 777 /var/www/html/storage/ /var/www/html/bootstrap/cache
-
-ENTRYPOINT ["php-fpm", "-F"]
+WORKDIR /var/www
