@@ -10,9 +10,22 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+	/**
+	 * @OA\Get(
+	 *     path="/api/posts",
+	 *     operationId="GetPostIndex",
+	 *     tags={"Post"},
+	 *     @OA\Response(
+	 *         response="200",
+	 *         description="Returns data",
+	 *         @OA\JsonContent(
+	 *               type="array",
+	 *
+	 *               @OA\Items(ref="#/components/schemas/PostResourceV1")
+	 *        )
+	 *     ),
+	 * )
+	 */
     public function index()
     {
         $posts = Post::all();
@@ -28,9 +41,27 @@ class PostController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+	/**
+	 * @OA\Post(
+	 *     path="/api/posts",
+	 *     operationId="PostPostStore",
+	 *     tags={"Post"},
+	 *     security={{"bearerAuth": {} }},
+	 *     @OA\RequestBody(
+	 *
+	 *           @OA\MediaType(
+	 *                mediaType="application/json",
+	 *
+	 *                @OA\Schema(ref="#/components/schemas/PostStoreRequestV1")
+	 *            )
+	 *       ),
+	 *     @OA\Response(
+	 *         response="200",
+	 *         description="Returns data",
+	 *         @OA\JsonContent(ref="#/components/schemas/PostResourceV1")
+	 *     ),
+	 * )
+	 */
     public function store(StoreRequest $request)
     {
         $data = $request->validated();
@@ -39,9 +70,25 @@ class PostController extends Controller
         return PostResource::make($post);
     }
 
-    /**
-     * Display the specified resource.
-     */
+	/**
+	 * @OA\Get(
+	 *     path="/api/posts/{post}",
+	 *     operationId="GetPostShow",
+	 *     tags={"Post"},
+	 *     @OA\Parameter(
+	 *     	   description="ID of post",
+	 *     	   in="path",
+	 *         name="post",
+	 *     	   required=true,
+	 *     	   example="1"
+	 *	   ),
+	 *     @OA\Response(
+	 *         response="200",
+	 *         description="Returns data",
+	 *         @OA\JsonContent(ref="#/components/schemas/PostResourceV1")
+	 *     ),
+	 * )
+	 */
     public function show(string $id)
     {
         return PostResource::make(Post::find($id));
@@ -55,9 +102,34 @@ class PostController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+	/**
+	 * @OA\Put(
+	 *     path="/api/posts/{post}",
+	 *     operationId="GetPostUpdate",
+	 *     tags={"Post"},
+	 *     security={{"bearerAuth": {} }},
+	 *     @OA\RequestBody(
+	 *
+	 *            @OA\MediaType(
+	 *                 mediaType="application/json",
+	 *
+	 *                 @OA\Schema(ref="#/components/schemas/PostUpdateRequestV1")
+	 *             )
+	 *     ),
+	 *     @OA\Parameter(
+	 *           description="ID of post",
+	 *           in="path",
+	 *           name="post",
+	 *           required=true,
+	 *           example="1"
+	 *     ),
+	 *     @OA\Response(
+	 *         response="200",
+	 *         description="Returns data",
+	 *         @OA\JsonContent(ref="#/components/schemas/PostResourceV1")
+	 *     )
+	 * )
+	 */
     public function update(UpdateRequest $request, string $id)
     {
         $data = $request->validated();
@@ -67,9 +139,25 @@ class PostController extends Controller
         return PostResource::make($post);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+	/**
+	 * @OA\Delete(
+	 *     path="/api/posts/{post}",
+	 *     operationId="GetPostDelete",
+	 *     tags={"Post"},
+	 *     security={{"bearerAuth": {} }},
+	 *     @OA\Parameter(
+	 *           description="ID of post",
+	 *           in="path",
+	 *           name="post",
+	 *           required=true,
+	 *           example="1"
+	 *       ),
+	 *     @OA\Response(
+	 *         response="200",
+	 *         description="Post deleted successfully"
+	 *     )
+	 * )
+	 */
     public function destroy(string $id)
     {
         $post = Post::find($id);

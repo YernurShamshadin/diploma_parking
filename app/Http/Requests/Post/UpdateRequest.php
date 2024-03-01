@@ -4,6 +4,23 @@ namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *      schema="PostUpdateRequestV1",
+ *      required={"title", "like"},
+ *
+ *      @OA\Property(
+ *           property="title",
+ *           type="string",
+ *           example="Hello postermoster"
+ *      ),
+ *      @OA\Property(
+ *           property="like",
+ *           type="integer",
+ *           example="1"
+ *      )
+ * )
+ */
 class UpdateRequest extends FormRequest
 {
     /**

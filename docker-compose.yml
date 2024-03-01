@@ -4,6 +4,7 @@ services:
   php-fpm:
     build:
       context: docker/php-fpm
+    tty: true
     volumes:
       - ./:/var/www
     depends_on:
@@ -15,8 +16,9 @@ services:
     build:
       context: docker/nginx
     volumes:
-      - ./:/var/www/
+      - ./:/var/www
       - ./storage/app/public/:/var/www/public/storage/
+    tty: true
     ports:
       - "9999:80"
     networks:
