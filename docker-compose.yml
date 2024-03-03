@@ -6,21 +6,21 @@ services:
       context: docker/php-fpm
     tty: true
     volumes:
-      - ./:/var/www
+      - ./:/var/www/
     depends_on:
       - db
     networks:
       - laravel
 
   nginx:
-    build:
-      context: docker/nginx
+    image: nginx:latest
     volumes:
       - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./storage/app/public/:/var/www/public/storage/
     tty: true
     ports:
-      - "9999:80"
+      - "8999:80"
     networks:
       - laravel
     depends_on:

@@ -27,4 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('posts', PostController::class)->middleware('jwt.auth');
+//Route::resource('posts', PostController::class)->middleware('jwt.auth');
+
+Route::get('posts', [PostController::class, 'index']);
+Route::post('posts', [PostController::class, 'store'])->middleware('jwt.auth');
+Route::get('posts/{post}', [PostController::class, 'show']);
+Route::put('posts/{post}', [PostController::class, 'update'])->middleware('jwt.auth');
+Route::delete('posts/{post}', [PostController::class, 'destroy'])->middleware('jwt.auth');
