@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -18,8 +20,55 @@ class AuthController extends Controller
 		$this->middleware('auth:api', ['except' => ['login']]);
 	}
 
+    /**
+     * @OA\Post(
+     * 	path="/api/auth/register",
+     * 	operationId="Registration",
+     * 	tags={"Auth"},
+     *  @OA\RequestBody(
+     *
+     *        @OA\MediaType(
+     *                 mediaType="application/json",
+     *
+     *                 @OA\Schema(
+     *     					@OA\Property(property="name", type="string", example="User"),
+     *     					@OA\Property(property="phone", type="string", example="7777777777"),
+     *     					@OA\Property(property="email", type="string", example="user@user.kz"),
+     *      				@OA\Property(property="password", type="string", example="12345678")
+     * 				   )
+     *        )
+     *  ),
+     * 	 	@OA\Response(
+     *           response="200",
+     *           description="User created successfully"
+     *       )
+     * )
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'min:10', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'string', 'confirmed', 'min:6'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user,
+        ]);
+    }
+
 	/**
-	 * @OA\Get(
+	 * @OA\Post(
 	 * 	path="/api/auth/login",
 	 * 	operationId="Login",
 	 * 	tags={"Auth"},
@@ -61,21 +110,35 @@ class AuthController extends Controller
 		return $this->respondWithToken($token);
 	}
 
-	/**
-	 * Get the authenticated User.
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
+    /**
+     * @OA\Get(
+     * 	path="/api/auth/me",
+     * 	operationId="Me",
+     * 	tags={"Auth"},
+     * 	@OA\Response(
+     *          response="200",
+     *          description="You"
+     *      )
+     * )
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function me()
 	{
 		return response()->json(auth()->user());
 	}
 
-	/**
-	 * Log the user out (Invalidate the token).
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
+    /**
+     * @OA\Post(
+     * 	path="/api/auth/logout",
+     * 	operationId="Logout",
+     * 	tags={"Auth"},
+     * 	@OA\Response(
+     *          response="200",
+     *          description="Successfully logged out"
+     *      )
+     * )
+     * @return \Illuminate\Http\JsonResponse
+     */
 	public function logout()
 	{
 		auth()->logout();

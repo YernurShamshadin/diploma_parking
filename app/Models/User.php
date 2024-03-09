@@ -3,12 +3,24 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string|null     $email
+ * @property Carbon|string|null $email_verified_at
+ * @property string $phone
+ * @property Carbon|string|null $phone_verified_at
+ * @property string $password
+ * @property string|null $two_factor_code
+ * @property Carbon|string|null $two_factor_expires_at
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -22,6 +34,9 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'phone',
+        'two_factor_code',
+        'two_factor_expires_at',
     ];
 
     /**
@@ -41,6 +56,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'phone_verified_at' => 'datetime',
+        'two_factor_expires_at' => 'datetime',
     ];
 
 	public function getJWTIdentifier()
@@ -52,4 +69,25 @@ class User extends Authenticatable implements JWTSubject
 	{
 		return [];
 	}
+
+    public function generateTwoFactorCode(): void
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = rand(100000, 999999);
+        $this->two_factor_expires_at = now()->addMinutes(5);
+        $this->save();
+    }
+
+    public function resetTwoFactorCode(): void
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
+    }
+
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->phone;
+    }
 }
