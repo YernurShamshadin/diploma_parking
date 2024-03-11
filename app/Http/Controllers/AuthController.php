@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -17,7 +15,7 @@ class AuthController extends Controller
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth:api', ['except' => ['login']]);
+		$this->middleware('auth:api', ['except' => ['login', 'register']]);
 	}
 
     /**
@@ -34,13 +32,15 @@ class AuthController extends Controller
      *     					@OA\Property(property="name", type="string", example="User"),
      *     					@OA\Property(property="phone", type="string", example="7777777777"),
      *     					@OA\Property(property="email", type="string", example="user@user.kz"),
-     *      				@OA\Property(property="password", type="string", example="12345678")
+     *      				@OA\Property(property="password", type="string", example="12345678"),
+     *      				@OA\Property(property="password_confirmation", type="string", example="12345678")
      * 				   )
      *        )
      *  ),
      * 	 	@OA\Response(
      *           response="200",
-     *           description="User created successfully"
+     *           description="User created successfully",
+     *          @OA\JsonContent()
      *       )
      * )
      * @return \Illuminate\Http\JsonResponse
@@ -63,7 +63,6 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'User created successfully',
-            'user' => $user,
         ]);
     }
 
@@ -115,6 +114,7 @@ class AuthController extends Controller
      * 	path="/api/auth/me",
      * 	operationId="Me",
      * 	tags={"Auth"},
+     *  security={{"bearerAuth": {} }},
      * 	@OA\Response(
      *          response="200",
      *          description="You"
@@ -132,6 +132,7 @@ class AuthController extends Controller
      * 	path="/api/auth/logout",
      * 	operationId="Logout",
      * 	tags={"Auth"},
+     *  security={{"bearerAuth": {} }},
      * 	@OA\Response(
      *          response="200",
      *          description="Successfully logged out"
