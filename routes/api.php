@@ -21,7 +21,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 	Route::post('login', [AuthController::class, 'login']);
 	Route::post('logout', [AuthController::class, 'logout']);
 	Route::post('refresh', [AuthController::class, 'refresh']);
-	Route::post('me', [AuthController::class, 'me']);
+	Route::get('me', [AuthController::class, 'me']);
+    Route::post('phone-verification', [AuthController::class, 'phoneVerify']);
+    Route::post('phone_login', [AuthController::class, 'phoneLogin']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

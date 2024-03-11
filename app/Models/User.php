@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -20,6 +21,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $password
  * @property string|null $two_factor_code
  * @property Carbon|string|null $two_factor_expires_at
+ * @property-read UserCode $userCode
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -70,24 +72,20 @@ class User extends Authenticatable implements JWTSubject
 		return [];
 	}
 
-    public function generateTwoFactorCode(): void
+    public function generateCode(): string
     {
-        $this->timestamps = false;
-        $this->two_factor_code = rand(100000, 999999);
-        $this->two_factor_expires_at = now()->addMinutes(5);
-        $this->save();
+        $code = rand(1000, 9999);
+
+        UserCode::query()->updateOrCreate(
+            ['user_id' => $this->id],
+            ['code' => $code]
+        );
+
+        return (string) $code;
     }
 
-    public function resetTwoFactorCode(): void
+    public function userCode(): BelongsTo
     {
-        $this->timestamps = false;
-        $this->two_factor_code = null;
-        $this->two_factor_expires_at = null;
-        $this->save();
-    }
-
-    public function routeNotificationForVonage($notification)
-    {
-        return $this->phone;
+        return $this->belongsTo(UserCode::class);
     }
 }
