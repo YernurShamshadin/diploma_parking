@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParkingController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,3 +39,8 @@ Route::post('posts', [PostController::class, 'store'])->middleware('jwt.auth');
 Route::get('posts/{post}', [PostController::class, 'show']);
 Route::put('posts/{post}', [PostController::class, 'update'])->middleware('jwt.auth');
 Route::delete('posts/{post}', [PostController::class, 'destroy'])->middleware('jwt.auth');
+
+Route::group(['prefix' => 'parkings', 'middleware' => 'jwt.auth'], function () {
+    Route::get('{address}', [ParkingController::class, 'show']);
+    Route::get('addresses', [AddressController::class, 'index']);
+});

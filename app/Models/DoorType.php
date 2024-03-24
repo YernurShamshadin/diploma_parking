@@ -16,4 +16,6 @@ class DoorType extends Model
     protected $fillable = [
         'title',
     ];
+
+    public $timestamps = false;
 }

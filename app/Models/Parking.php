@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -22,6 +25,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon|null $updated_at
  * @property-read Address $address
  * @property-read ParkingStatus $status
+ * @property-read ParkingPrice[]|Collection $prices
+ * @property-read ParkingPrice|null $regularPriceByHour
+ * @property-read ParkingSchedule|null $schedule
+ * @property-read ParkingPhoto[]|Collection $photos
+ * @property-read ParkingSlot[]|Collection $slots
  */
 class Parking extends Model
 {
@@ -59,5 +67,31 @@ class Parking extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(ParkingStatus::class);
+    }
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(ParkingPrice::class);
+    }
+
+    public function schedule(): ?HasOne
+    {
+        return $this->hasOne(ParkingSchedule::class);
+    }
+
+    public function photos(): HasMany
+    {
+        return $this->hasMany(ParkingPhoto::class);
+    }
+
+    public function regularPriceByHour(): ?HasOne
+    {
+        return $this->hasOne(ParkingPrice::class)
+            ->where('type', PriceType::REGULAR_BY_HOUR_TYPE_ID);
+    }
+
+    public function slots(): HasMany
+    {
+        return $this->hasMany(ParkingSlot::class);
     }
 }
