@@ -14,7 +14,7 @@ class PostController extends Controller
 	 * @OA\Get(
 	 *     path="/api/posts",
 	 *     operationId="GetPostIndex",
-	 *     tags={"Post"},
+	 *     tags={"Test Post"},
 	 *     @OA\Response(
 	 *         response="200",
 	 *         description="Returns data",
@@ -45,7 +45,7 @@ class PostController extends Controller
 	 * @OA\Post(
 	 *     path="/api/posts",
 	 *     operationId="PostPostStore",
-	 *     tags={"Post"},
+	 *     tags={"Test Post"},
 	 *     security={{"bearerAuth": {} }},
 	 *     @OA\RequestBody(
 	 *
@@ -74,7 +74,7 @@ class PostController extends Controller
 	 * @OA\Get(
 	 *     path="/api/posts/{post}",
 	 *     operationId="GetPostShow",
-	 *     tags={"Post"},
+	 *     tags={"Test Post"},
 	 *     @OA\Parameter(
 	 *     	   description="ID of post",
 	 *     	   in="path",
@@ -106,7 +106,7 @@ class PostController extends Controller
 	 * @OA\Put(
 	 *     path="/api/posts/{post}",
 	 *     operationId="GetPostUpdate",
-	 *     tags={"Post"},
+	 *     tags={"Test Post"},
 	 *     security={{"bearerAuth": {} }},
 	 *     @OA\RequestBody(
 	 *
@@ -143,7 +143,7 @@ class PostController extends Controller
 	 * @OA\Delete(
 	 *     path="/api/posts/{post}",
 	 *     operationId="GetPostDelete",
-	 *     tags={"Post"},
+	 *     tags={"Test Post"},
 	 *     security={{"bearerAuth": {} }},
 	 *     @OA\Parameter(
 	 *           description="ID of post",

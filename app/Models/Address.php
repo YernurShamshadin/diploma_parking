@@ -5,6 +5,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -15,6 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $door_type_id
  * @property Carbon|string $created_at
  * @property Carbon|string $updated_at
+ *
+ * @property-read DoorType $doorType
+ * @property-read Parking|null $parking
  */
 class Address extends Model
 {
@@ -38,4 +43,14 @@ class Address extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function doorType(): BelongsTo
+    {
+        return $this->belongsTo(DoorType::class);
+    }
+
+    public function parking(): HasOne
+    {
+        return $this->hasOne(Parking::class);
+    }
 }

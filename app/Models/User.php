@@ -4,8 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -22,6 +24,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string|null $two_factor_code
  * @property Carbon|string|null $two_factor_expires_at
  * @property-read UserCode $userCode
+ * @property-read UserFavoriteParking[]|Collection $favoriteParkings
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -87,5 +90,10 @@ class User extends Authenticatable implements JWTSubject
     public function userCode(): BelongsTo
     {
         return $this->belongsTo(UserCode::class);
+    }
+
+    public function fFavoriteParkings(): HasMany
+    {
+        return $this->hasMany(UserFavoriteParking::class);
     }
 }

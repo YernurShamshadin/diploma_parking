@@ -41,6 +41,8 @@ Route::put('posts/{post}', [PostController::class, 'update'])->middleware('jwt.a
 Route::delete('posts/{post}', [PostController::class, 'destroy'])->middleware('jwt.auth');
 
 Route::group(['prefix' => 'parkings', 'middleware' => 'jwt.auth'], function () {
-    Route::get('{address}', [ParkingController::class, 'show']);
+    Route::get('{parking}', [ParkingController::class, 'show']);
     Route::get('addresses', [AddressController::class, 'index']);
+    Route::get('search', [ParkingController::class, 'search']);
+    Route::get('favorites', [AddressController::class, 'favorites']);
 });

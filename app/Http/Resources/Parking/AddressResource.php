@@ -25,6 +25,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *            type="float",
  *            example="1.000001"
  *     ),
+ *     @OA\Property(
+ *            property="parking_id",
+ *            type="integer",
+ *            example="1"
+ *     )
  * )
  *
  * @mixin Address
@@ -37,6 +42,7 @@ class AddressResource extends JsonResource
             'id' => $this->id,
             'x' => $this->x_coordinate,
             'y' => $this->y_coordinate,
+            'parking_id' => $this->parking?->id
         ];
     }
 }
