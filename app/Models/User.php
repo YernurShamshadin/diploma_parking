@@ -16,6 +16,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * @property int $id
  * @property string $name
+ * @property string|null $surname
  * @property string|null     $email
  * @property Carbon|string|null $email_verified_at
  * @property string $phone
@@ -37,6 +38,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+		'surname',
         'email',
         'password',
         'phone',
@@ -92,7 +94,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(UserCode::class);
     }
 
-    public function fFavoriteParkings(): HasMany
+    public function favoriteParkings(): HasMany
     {
         return $this->hasMany(UserFavoriteParking::class);
     }

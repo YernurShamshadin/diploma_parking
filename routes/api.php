@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParkingController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +46,12 @@ Route::group(['prefix' => 'parkings', 'middleware' => 'jwt.auth'], function () {
     Route::get('addresses', [AddressController::class, 'index']);
     Route::get('search', [ParkingController::class, 'search']);
     Route::get('favorites', [AddressController::class, 'favorites']);
+});
+
+Route::group(['prefix' => 'settings', 'middleware' => 'jwt.auth'], function () {
+	Route::group(['prefix' => 'profile'], function () {
+		Route::get('', [SettingController::class, 'show']);
+		Route::put('', [SettingController::class, 'update']);
+	});
+
 });
