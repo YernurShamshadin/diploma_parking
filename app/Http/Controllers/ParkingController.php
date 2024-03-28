@@ -112,7 +112,7 @@ class ParkingController extends Controller
     {
         $data = $request->validated();
 
-        $parkingWithAddress = Parking::query()
+        $parkingsWithAddress = Parking::query()
             ->where('name', 'ilike', "%{$data['keyword']}%")
             ->whereHas('address', function ($query) use ($data) {
                 $query
@@ -132,7 +132,7 @@ class ParkingController extends Controller
 
         return $this->response(
             'Parkings names successfully returned',
-            SearchResource::collection($parkingWithAddress)
+            SearchResource::collection($parkingsWithAddress)
         );
     }
 }

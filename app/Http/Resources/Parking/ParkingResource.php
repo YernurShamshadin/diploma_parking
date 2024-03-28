@@ -27,6 +27,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *           example="Satpayeva 90"
  *     ),
  *     @OA\Property(
+ *           property="address_x",
+ *           type="float",
+ *           example="1.000001"
+ *     ),
+ *     @OA\Property(
+ *           property="address_y",
+ *           type="float",
+ *           example="1.000001"
+ *     ),
+ *     @OA\Property(
  *           property="phone",
  *           type="string",
  *           example="+7 (999) 999-99-99"
